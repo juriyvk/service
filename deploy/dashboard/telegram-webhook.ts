@@ -192,8 +192,13 @@ serve(async (req) => {
     const m = update.message;
     if (!Number.isSafeInteger(update.update_id))
         throw new HttpError(400, 'Invalid update');
-    if (!m || m.chat?.type !== 'private' || m.chat.id !== m.from?.id || m.from?.is_bot)
+    if (!m || m.chat?.type !== 'private' || m.chat.id !== m.from?.id || m.from?.is_bot || !Number.isSafeInteger(m.from?.id) || m.from.id <= 0)
         return json({ ok: true });
+    // Explicit identity help in a verified private chat grants no employee access.
+    if (/^\/id(?:@\w+)?$/i.test(m.text || '')) {
+        await telegram('sendMessage', { chat_id: m.chat.id, text: 'Ваш Telegram ID: ' + m.from.id + '\nПередайте его администратору лично. Эта команда не предоставляет доступ к CRM.' });
+        return json({ ok: true });
+    }
     const actor = await rpc('dvfm_identity', { p_telegram_id: m.from.id });
     if (!actor)
         return json({ ok: true });

@@ -18,7 +18,7 @@ const values={TELEGRAM_BOT_TOKEN:'synthetic-token',ALLOWED_ORIGINS:'https://fixt
 let handler;globalThis.Deno={env:{get:name=>values[name]},serve:fn=>{handler=fn;}};
 const routes={};for(const name of ['crm','telegram-auth','telegram-webhook']){await import(pathToFileURL(`${temp}/${name}/index.js`));routes[name]=handler;}
 const originalFetch=globalThis.fetch;let calls=[];let registered=true;
-globalThis.fetch=async(url,options)=>{calls.push({url:String(url),body:JSON.parse(options.body)});const data=String(url).endsWith('dvfm_identity')?(registered?{id:'server-actor',legacy_id:31,position:'Fixture position',role:'employee',full_name:'Fixture'}:null):{confirmed:true};return new Response(JSON.stringify(data),{status:200});};
+globalThis.fetch=async(url,options)=>{calls.push({url:String(url),body:JSON.parse(options.body)});const data=String(url).startsWith('https://api.telegram.org/')?{ok:true,result:{message_id:1}}:String(url).endsWith('dvfm_identity')?(registered?{id:'server-actor',legacy_id:31,position:'Fixture position',role:'employee',full_name:'Fixture'}:null):{confirmed:true};return new Response(JSON.stringify(data),{status:200});};
 function signed(){const p=new URLSearchParams({auth_date:String(Math.floor(Date.now()/1000)),user:'{"id":900000001}'});const check=[...p].sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>`${k}=${v}`).join('\n');const secret=createHmac('sha256','WebAppData').update(values.TELEGRAM_BOT_TOKEN).digest();p.set('hash',createHmac('sha256',secret).update(check).digest('hex'));return p.toString();}
 const req=(data,headers={})=>new Request('https://edge.fixture.invalid/',{method:'POST',headers:{'Content-Type':'application/json',origin:'https://fixture.invalid',...headers},body:JSON.stringify(data)});
 after(async()=>{globalThis.fetch=originalFetch;delete globalThis.Deno;await rm(temp,{recursive:true,force:true});});
@@ -31,4 +31,12 @@ test('groups are ignored even with valid webhook secret',async()=>{calls=[];cons
 
 test('legacy gate rejects missing initData and malformed JSON object with 400',async()=>{
  for(const data of [{},null,[]])assert.equal((await routes['telegram-auth'](req(data))).status,400);
+});
+
+test('private id command replies only to sender without registering an employee',async()=>{
+ calls=[];registered=false;
+ try{const response=await routes['telegram-webhook'](req({update_id:11,message:{chat:{id:900000001,type:'private'},from:{id:900000001},text:'/id'}},{'x-telegram-bot-api-secret-token':values.TELEGRAM_WEBHOOK_SECRET}));assert.equal(response.status,200);assert.equal(calls.length,1);assert.ok(calls[0].url.endsWith('/sendMessage'));assert.equal(calls[0].body.chat_id,900000001);assert.ok(calls[0].body.text.includes('900000001'));}finally{registered=true;}
+});
+test('id command ignores group chats, mismatched sender and invalid identity',async()=>{
+ for(const message of [{chat:{id:-1,type:'group'},from:{id:900000001},text:'/id'},{chat:{id:900000002,type:'private'},from:{id:900000001},text:'/id'},{chat:{id:0,type:'private'},from:{id:0},text:'/id'}]){calls=[];assert.equal((await routes['telegram-webhook'](req({update_id:12,message},{'x-telegram-bot-api-secret-token':values.TELEGRAM_WEBHOOK_SECRET}))).status,200);assert.equal(calls.length,0);}
 });

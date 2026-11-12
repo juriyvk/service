@@ -79,3 +79,15 @@ node scripts/build-staging.mjs --check
 Ожидаемый результат configure: ok=true, bot=DVFMTESTCRM_bot, configured=true, webhook_url=https://wepogbvijpvyvyfzxzeo.supabase.co/functions/v1/telegram-webhook. После завершения настройки helper можно удалить из развёрнутых Edge Functions. Worker secret в production не даёт административных прав через этот helper: проверка project URL запрещает работу вне указанного staging. Helper не принимает URL назначения или username от клиента.
 
 Подключённый webhook ещё не означает успешную обработку личных сообщений: реестр staging сейчас пуст. Проверка зарегистрированного actor, документов, Mini App и доставки уведомлений остаётся отдельным этапом. Существующий рабочий бот и production endpoint не меняются.
+
+## Подтверждение Telegram webhook
+
+Владелец выполнил configure через staging helper и предоставил ответ: ok=true, bot=DVFMTESTCRM_bot, configured=true, webhook_url=https://wepogbvijpvyvyfzxzeo.supabase.co/functions/v1/telegram-webhook, pending_updates=0. Токен соответствует ожидаемому тестовому боту и Telegram принял адрес. Это подтверждение настройки, а не успешной обработки задачи от зарегистрированного пользователя.
+
+## Отдельная статическая страница staging
+
+Тестовый frontend опубликован отдельным PR #2 только в папке staging существующего репозитория. Рабочий корневой index.html не изменён; основной CRM PR #1 остаётся черновиком. Адрес тестовой страницы: https://juriyvk.github.io/service/staging/ . API в ней фиксирован на тестовый Supabase wepogbvijpvyvyfzxzeo. Нельзя менять адрес через query string, поэтому чужая ссылка не перенаправляет initData на другой сервер. В интерфейсе указана тестовая среда, а обычный браузер показывает Telegram gate.
+
+Источник — canonical index.html/app.js; сборка: `node scripts/build-staging-site.mjs`. Версионированный результат — preview/staging/, manifest содержит SHA-256 исходников и результата. Для отдельного PR публикации копировать сборку в staging/ ветки, созданной от актуального main; не сливать весь CRM PR ради preview. `npm run check` проверяет соответствие артефактов, `npm run test:browser:staging` запускает мобильный сценарий с синтетическими данными и API mock.
+
+Для первоначального открытия из Telegram настроить в официальном @BotFather командой /setmenubutton меню **только DVFMTESTCRM_bot**: URL https://juriyvk.github.io/service/staging/ , подпись Открыть CRM. Это кнопка меню Mini App. Прямой deep link startapp дополнительно требует настройки main/named Mini App в BotFather; его ещё нельзя считать проверенным. TELEGRAM_MINI_APP_URL пока не заполнен, до этого outbox с task link не доставит уведомления. Реестр staging пуст: без явного добавления пользователя или отдельного синтетического runtime-теста вход завершится отказом доступа; перенос production-сотрудников не выполнялся.

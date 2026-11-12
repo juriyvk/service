@@ -35,3 +35,18 @@ node scripts/build-staging.mjs --check
 Для Dashboard подготовлены standalone файлы в `deploy/dashboard/`. В Edge Functions → Deploy a new function → Via Editor создать функцию с точным именем и заменить весь index.ts содержимым соответствующего файла. Для каждой выключить gateway Verify JWT: обработчик сам проверяет Telegram initData или webhook secret. Использовать только staging wepogbvijpvyvyfzxzeo. Исходный CLI-вариант с `_shared` остаётся canonical, standalone файлы генерируются из него и отдельно проходят handler-тесты.
 
 Перед функциональной проверкой создать отдельного тестового бота через официальный @BotFather командой /newbot. Его токен сохранить **только** в staging Supabase → Edge Functions → Secrets как TELEGRAM_BOT_TOKEN. Не присылать токен в чат и не добавлять в GitHub. SUPABASE_URL и SUPABASE_SERVICE_ROLE_KEY предоставляет runtime Supabase. Позже потребуются TELEGRAM_WEBHOOK_SECRET, TELEGRAM_MINI_APP_URL и OUTBOX_WORKER_AUTH; их назначение описано в DEPLOY.md. Для первого этапа используется прежний разрешённый origin https://juriyvk.github.io, либо явно настроенный ALLOWED_ORIGINS.
+
+## Проверка развёрнутой telegram-auth
+
+13 ноября 2026 (московское время) выполнены внешние запросы к staging `telegram-auth` без действительных Telegram credentials и без изменения данных:
+
+| Запрос | Ответ |
+| --- | --- |
+| Пустой JSON | 400, initData required |
+| Заведомо некорректный initData | 401, Invalid signature |
+| JSON null | 400, Invalid JSON object |
+| Origin вне списка | 403, Origin forbidden |
+| OPTIONS от https://juriyvk.github.io | 204, корректный Access-Control-Allow-Origin и content-type в разрешённых заголовках |
+| GET | 405, POST required |
+
+Ответы относятся к приложению, а не отказу gateway JWT: canonical обработчик исполняется. Наличие TELEGRAM_BOT_TOKEN достаточно для достижения проверки подписи, но совпадение токена с @DVFMTESTCRM_bot и успешная авторизация по действительной подписи этим не проверены. Для этого требуется отдельная приёмка через Telegram Mini App. Не сохранять действительный initData в GitHub или переписке.

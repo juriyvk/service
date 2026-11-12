@@ -18,4 +18,58 @@ function closeModal(){document.getElementById('modalwrap').classList.remove('sho
 function showTaskForm(){modal('Новая задача',`<form id="modalform"><label class="formlabel">Название</label><input name="title" class="field" required maxlength="120" placeholder="Что нужно сделать?"><label class="formlabel">Мероприятие</label><input name="project" class="field" required placeholder="Например, Байконур"><label class="formlabel">Ответственный</label><input name="person" class="field" required placeholder="Имя сотрудника"><label class="formlabel">Срок</label><input name="date" class="field" required type="date"><button class="btn" style="width:100%">Создать задачу</button></form>`,f=>{tasks.unshift({id:Date.now(),title:f.get('title'),project:f.get('project'),person:f.get('person'),date:f.get('date'),status:'В работе'});save();closeModal();render()})}
 function showTask(id){const t=tasks.find(x=>x.id===id);if(!t)return;modal(t.title,`<div class="details">${esc(t.project)} · ${esc(t.person)} · ${fmt(t.date)}</div><div class="spacer"></div><form id="modalform"><label class="formlabel">Статус</label><select class="field" name="status">${['В работе','На согласовании','Просрочено','Выполнено'].map(s=>`<option ${t.status===s?'selected':''}>${s}</option>`).join('')}</select><button class="btn" style="width:100%">Сохранить статус</button></form>`,f=>{t.status=f.get('status');save();closeModal();render()})}
 function showRequestForm(){modal('Новая заявка',`<form id="modalform"><label class="formlabel">Тип заявки</label><select class="field" name="type"><option>Отпуск</option><option>Командировка</option><option>Отгул</option></select><label class="formlabel">Начало</label><input class="field" name="start" type="date" required><label class="formlabel">Окончание</label><input class="field" name="end" type="date" required><label class="formlabel">Комментарий</label><textarea class="field" name="comment" placeholder="Дополнительная информация"></textarea><button class="btn" style="width:100%">Отправить заявку (демо)</button></form>`,f=>{if(f.get('end')<f.get('start')){alert('Дата окончания должна быть не раньше начала');return}requests.unshift(Object.fromEntries(f.entries()));localStorage.setItem('dvfm_demo_requests',JSON.stringify(requests));closeModal();render()})}
-render();</script></body></html>
+
+async function checkTelegramAuth() {
+  const content = document.getElementById('content');
+  const nav = document.getElementById('nav');
+  const roleSelect = document.getElementById('role');
+
+  nav.innerHTML = '';
+  roleSelect.style.display = 'none';
+  content.innerHTML = '<h2>Проверяем доступ через Telegram…</h2>';
+
+  const initData = window.Telegram?.WebApp?.initData;
+
+  if (!initData) {
+    content.innerHTML = '<h2>Откройте приложение через @dvfm_service_bot</h2>';
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      'https://mskbgkiksgpdosjarivo.supabase.co/functions/v1/telegram-auth',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ initData }),
+        cache: 'no-store'
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.ok) {
+      content.innerHTML = '<h2>Доступ не подтверждён</h2><p>Код: ' + response.status + '</p>';
+      return;
+    }
+
+    const employee = result.employee;
+
+    roleSelect.value = ['manager', 'admin', 'deputy'].includes(employee.role)
+      ? 'manager'
+      : 'employee';
+
+    render();
+
+    content.insertAdjacentHTML(
+      'afterbegin',
+      '<p class="hint">Вход подтверждён. Демонстрационный режим.</p>'
+    );
+  } catch (error) {
+    content.innerHTML = '<h2>Ошибка подключения к серверу</h2><p>Проверьте Edge Function и её Logs.</p>';
+  }
+}
+
+checkTelegramAuth();
+</script></body></html>
+

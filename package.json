@@ -1,0 +1,17 @@
+{
+  "name": "dvfm-service",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/security.test.js && node tests/database.test.js && node tests/edge.test.js",
+    "check": "node --check app.js && tsc --noEmit --allowJs --checkJs false --allowImportingTsExtensions --module esnext --target es2022 --moduleResolution bundler --lib es2022,dom,dom.iterable --skipLibCheck tests/deno.d.ts supabase/functions/*/index.ts",
+    "test:browser": "node tests/browser.mjs",
+    "check:edge": "deno check supabase/functions/telegram-auth/index.ts supabase/functions/crm/index.ts supabase/functions/telegram-webhook/index.ts"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.16",
+    "@playwright/test": "^1.65.0",
+    "deno": "^2.9.6",
+    "typescript": "^5.9.3"
+  }
+}

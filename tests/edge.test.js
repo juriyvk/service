@@ -7,8 +7,10 @@ import {pathToFileURL} from 'node:url';
 import ts from 'typescript';
 const temp=await mkdtemp(`${tmpdir()}/dvfm-edge-`);
 await writeFile(`${temp}/package.json`,'{"type":"module"}');
-for(const file of ['_shared/runtime.ts','_shared/security.js','crm/index.ts','telegram-auth/index.ts','telegram-webhook/index.ts']){
- const source=await readFile(new URL(`../supabase/functions/${file}`,import.meta.url),'utf8');
+const bundled=process.env.DVFM_EDGE_BUNDLES==='1';
+const files=bundled?['crm/index.ts','telegram-auth/index.ts','telegram-webhook/index.ts']:['_shared/runtime.ts','_shared/security.js','crm/index.ts','telegram-auth/index.ts','telegram-webhook/index.ts'];
+for(const file of files){
+ const source=await readFile(new URL(bundled?`../deploy/dashboard/${file.split('/')[0]}.ts`:`../supabase/functions/${file}`,import.meta.url),'utf8');
  const output=file.replace(/\.ts$/,'.js');await mkdir(`${temp}/${output.split('/')[0]}`,{recursive:true});
  await writeFile(`${temp}/${output}`,ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext,allowJs:true}}).outputText.replaceAll("runtime.ts'","runtime.js'"));
 }

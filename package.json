@@ -3,10 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/security.test.js && node tests/database.test.js && node tests/legacy-uuid.test.js && node tests/staging-setup.test.js && node tests/edge.test.js",
-    "check": "node --check app.js && tsc --noEmit --allowJs --checkJs false --allowImportingTsExtensions --module esnext --target es2022 --moduleResolution bundler --lib es2022,dom,dom.iterable --skipLibCheck tests/deno.d.ts supabase/functions/*/index.ts && node scripts/build-staging.mjs --check",
+    "test": "node tests/security.test.js && node tests/database.test.js && node tests/legacy-uuid.test.js && node tests/staging-setup.test.js && node tests/edge.test.js && DVFM_EDGE_BUNDLES=1 node tests/edge.test.js",
+    "check": "node --check app.js && tsc --noEmit --allowJs --checkJs false --allowImportingTsExtensions --module esnext --target es2022 --moduleResolution bundler --lib es2022,dom,dom.iterable --skipLibCheck tests/deno.d.ts supabase/functions/*/index.ts && node scripts/build-staging.mjs --check && node scripts/build-dashboard.mjs --check",
     "test:browser": "node tests/browser.mjs",
-    "check:edge": "deno check supabase/functions/telegram-auth/index.ts supabase/functions/crm/index.ts supabase/functions/telegram-webhook/index.ts"
+    "check:edge": "deno check supabase/functions/telegram-auth/index.ts supabase/functions/crm/index.ts supabase/functions/telegram-webhook/index.ts deploy/dashboard/telegram-auth.ts deploy/dashboard/crm.ts deploy/dashboard/telegram-webhook.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.16",

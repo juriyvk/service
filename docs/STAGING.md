@@ -25,3 +25,13 @@ node scripts/build-staging.mjs --check
 ```
 
 `docs/staging-setup.sql` — сгенерированный файл. Обновлять исходники и `scripts/staging-smoke.sql`, затем пересобирать. Проверка согласованности входит в `npm run check`. Локальные тесты выполняют полный SQL в PostgreSQL/WASM с тестовыми Storage objects/buckets; реальные Supabase системные таблицы проверяются первым запуском на staging.
+
+## Подтверждённый первый запуск
+
+13 ноября 2026 (московское время) владелец предоставил результат выполнения единого SQL в staging: `staging_schema_ready`, employees=0, tasks=0, queued_notifications=0. Создание схемы и встроенные SQL-проверки завершились успешно; синтетические записи не остались. Это не подтверждает Edge Runtime, загрузку файлов через Storage API или Telegram delivery.
+
+## Функции без терминала
+
+Для Dashboard подготовлены standalone файлы в `deploy/dashboard/`. В Edge Functions → Deploy a new function → Via Editor создать функцию с точным именем и заменить весь index.ts содержимым соответствующего файла. Для каждой выключить gateway Verify JWT: обработчик сам проверяет Telegram initData или webhook secret. Использовать только staging wepogbvijpvyvyfzxzeo. Исходный CLI-вариант с `_shared` остаётся canonical, standalone файлы генерируются из него и отдельно проходят handler-тесты.
+
+Перед функциональной проверкой создать отдельного тестового бота через официальный @BotFather командой /newbot. Его токен сохранить **только** в staging Supabase → Edge Functions → Secrets как TELEGRAM_BOT_TOKEN. Не присылать токен в чат и не добавлять в GitHub. SUPABASE_URL и SUPABASE_SERVICE_ROLE_KEY предоставляет runtime Supabase. Позже потребуются TELEGRAM_WEBHOOK_SECRET, TELEGRAM_MINI_APP_URL и OUTBOX_WORKER_AUTH; их назначение описано в DEPLOY.md. Для первого этапа используется прежний разрешённый origin https://juriyvk.github.io, либо явно настроенный ALLOWED_ORIGINS.

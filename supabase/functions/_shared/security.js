@@ -14,18 +14,20 @@ async function hmac(key, value) {
 }
 export async function verifyInitData(raw, token, now = Math.floor(Date.now() / 1000)) {
   if (!token) throw new HttpError(503, 'Server configuration missing');
-  if (typeof raw !== 'string' || !raw || raw.length > 16384) throw new HttpError(401, 'Invalid Telegram data');
+  if (typeof raw !== 'string' || !raw || raw.length > 8192) throw new HttpError(401, 'Invalid Telegram data');
   const params = new URLSearchParams(raw), seen = new Set();
   for (const [key] of params) { if (seen.has(key)) throw new HttpError(401, 'Duplicate field'); seen.add(key); }
   const hash = params.get('hash');
-  if (!/^[a-f0-9]{64}$/.test(hash || '')) throw new HttpError(401, 'Invalid signature');
+  if (!/^[a-f0-9]{64}$/i.test(hash || '')) throw new HttpError(401, 'Invalid signature');
   params.delete('hash');
   const check = [...params].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([k,v]) => `${k}=${v}`).join('\n');
   const secret = await hmac('WebAppData', token);
   const expected = [...await hmac(secret, check)].map(x => x.toString(16).padStart(2,'0')).join('');
-  if (!equal(hash, expected)) throw new HttpError(401, 'Invalid signature');
-  const authDate = Number(params.get('auth_date'));
-  if (!Number.isSafeInteger(authDate) || authDate <= 0 || now - authDate > 3600 || authDate > now + 30) throw new HttpError(401, 'Expired Telegram data');
+  if (!equal(hash.toLowerCase(), expected)) throw new HttpError(401, 'Invalid signature');
+  const rawDate = params.get('auth_date') || '';
+  if (!/^\d+$/.test(rawDate)) throw new HttpError(401, 'Invalid auth_date');
+  const authDate = Number(rawDate);
+  if (!Number.isSafeInteger(authDate) || authDate <= 0 || now - authDate > 3600 || authDate > now + 60) throw new HttpError(401, 'Expired Telegram data');
   let user; try { user = JSON.parse(params.get('user')); } catch { throw new HttpError(401, 'Invalid user'); }
   if (!Number.isSafeInteger(user?.id) || user.id <= 0) throw new HttpError(401, 'Invalid user');
   return user.id;

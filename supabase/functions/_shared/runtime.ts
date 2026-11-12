@@ -16,13 +16,13 @@ export async function body(req:Request,limit=32768) {
  let size=0; const parts:Uint8Array[]=[];
  while(true){const {value,done}=await reader.read();if(done)break;size+=value.length;if(size>limit){await reader.cancel();throw new HttpError(413,'Request too large');}parts.push(value);}
  const bytes=new Uint8Array(size);let pos=0;for(const part of parts){bytes.set(part,pos);pos+=part.length;}
- try{return JSON.parse(new TextDecoder().decode(bytes));}catch{throw new HttpError(400,'Invalid JSON');}
+ try{const data=JSON.parse(new TextDecoder().decode(bytes));if(!data||typeof data!=='object'||Array.isArray(data))throw new Error();return data;}catch{throw new HttpError(400,'Invalid JSON object');}
 }
 export function serve(handler:(req:Request)=>Promise<Response>,browser=false) {
  Deno.serve(async req=>{
  let headers:Record<string,string>={};
  try{
- if(browser){const origin=req.headers.get('origin');const allowed=env('ALLOWED_ORIGINS').split(',').map(s=>s.trim());if(origin&&!allowed.includes(origin))throw new HttpError(403,'Origin forbidden');if(origin)headers={'Access-Control-Allow-Origin':origin,'Vary':'Origin','Access-Control-Allow-Headers':'content-type','Access-Control-Allow-Methods':'POST, OPTIONS'};}
+ if(browser){const origin=req.headers.get('origin');const allowed=(Deno.env.get('ALLOWED_ORIGINS') || 'https://juriyvk.github.io').split(',').map(s=>s.trim());if(origin&&!allowed.includes(origin))throw new HttpError(403,'Origin forbidden');if(origin)headers={'Access-Control-Allow-Origin':origin,'Vary':'Origin','Access-Control-Allow-Headers':'content-type','Access-Control-Allow-Methods':'POST, OPTIONS'};}
  if(req.method==='OPTIONS'&&browser)return new Response(null,{status:204,headers});
  if(req.method!=='POST')throw new HttpError(405,'POST required');
  const response=await handler(req);for(const [k,v] of Object.entries(headers))response.headers.set(k,v);return response;

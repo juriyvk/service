@@ -9,7 +9,9 @@ const bot=async(update,telegram,action,data)=>(await db.query('select public.dvf
 before(async()=>{
  db=new PGlite();await db.exec(`create role anon;create role authenticated;create role service_role;create schema storage;create table storage.objects(bucket_id text);alter table storage.objects enable row level security;create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);`);
  await db.exec(await readFile(new URL('../supabase/migrations/202611120001_crm.sql',import.meta.url),'utf8'));
- let i=0;for(const [role,id] of Object.entries(ids))await db.query('insert into dvfm.employees(id,telegram_id,full_name,role) values($1,$2,$3,$4)',[id,900000001+i++,`Fixture ${role}`,role==='other'?'employee':role]);
+ await db.exec('create table public.employees(id integer primary key,telegram_id bigint,full_name text,position text,role text,is_active boolean);');
+ let i=0;for(const [role,id] of Object.entries(ids)){const telegram=900000001+i++;const actualRole=role==='other'?'employee':role;await db.query('insert into dvfm.employees(id,telegram_id,full_name,role) values($1,$2,$3,$4)',[id,telegram,`Fixture ${role}`,actualRole]);await db.query('insert into public.employees values($1,$2,$3,$4,$5,true)',[i,telegram,`Fixture ${role}`,'Fixture position',actualRole]);}
+ await db.exec(await readFile(new URL('../supabase/migrations/202611120002_existing_employees.sql',import.meta.url),'utf8'));
 });
 after(async()=>{await db?.close();});
 test('anon/authenticated cannot execute RPC or read private schema',async()=>{
@@ -57,7 +59,7 @@ test('outbox lease avoids concurrent claim and supports retry',async()=>{
  const job=jobs[0];await db.query('select public.dvfm_outbox($1,$2,true)',[job.id,job.lease_token]);assert.ok((await db.query('select sent_at from dvfm.outbox where id=$1',[job.id])).rows[0].sent_at);
 });
 test('revocation is immediate and unknown identity fails closed',async()=>{
- await db.query('update dvfm.employees set active=false where id=$1',[ids.other]);await assert.rejects(call('other','snapshot'),/forbidden/);
+ await db.query('update public.employees set is_active=false where telegram_id=$1',[900000004]);await assert.rejects(call('other','snapshot'),/forbidden/);
  assert.equal((await db.query('select public.dvfm_identity(999999999) as value')).rows[0].value,null);
 });
 
@@ -69,4 +71,32 @@ test('project visibility and creation cannot be forged by employees',async()=>{
  await assert.rejects(call('employee','project.create',{title:'No',role:'manager'}),/forbidden/);
  const p=await call('manager','project.create',{title:'Management only'});
  await assert.rejects(call('employee','task.create',{title:'Hidden project',project_id:p.id}),/forbidden/);
+});
+
+test('legacy identity preserves source ID and position while CRM uses stable UUID',async()=>{
+ const identity=(await db.query('select public.dvfm_identity(900000003) as value')).rows[0].value;
+ assert.equal(identity.id,ids.employee);assert.equal(identity.legacy_id,3);assert.equal(identity.position,'Fixture position');
+});
+test('legacy demotion and disabled recipients override stale internal mapping',async()=>{
+ await db.query("update public.employees set role='employee',full_name='Renamed fixture' where telegram_id=900000002");
+ assert.equal((await call('deputy','snapshot')).employee.role,'employee');
+ await assert.rejects(call('deputy','project.create',{title:'Denied after demotion'}),/forbidden/);
+ assert.equal((await call('deputy','snapshot')).employee.full_name,'Renamed fixture');
+ await db.query("update public.employees set role='deputy' where telegram_id=900000002");
+ await assert.rejects(call('manager','task.create',{title:'Inactive recipient',assignee_id:ids.other}),/inactive assignee/);
+ await db.query("update dvfm.employee_ids set role='manager',active=true where id=$1",[ids.employee]);
+ assert.equal((await call('employee','snapshot')).employee.role,'employee');
+ await assert.rejects(call('employee','project.create',{title:'No cached promotion'}),/forbidden/);
+});
+test('existing source additions get mappings; deletions and duplicate IDs fail closed',async()=>{
+ await db.exec("insert into public.employees values(5,900000005,'New fixture','Fixture','employee',true)");
+ const identity=(await db.query('select public.dvfm_identity(900000005) as value')).rows[0].value;assert.ok(identity.id);assert.equal(identity.legacy_id,5);
+ await db.exec("insert into public.employees values(6,900000005,'Duplicate fixture','Fixture','manager',true)");
+ assert.equal((await db.query('select public.dvfm_identity(900000005) as value')).rows[0].value,null);
+ await assert.rejects(call(identity.id,'snapshot'),/forbidden/);
+ await db.exec('delete from public.employees where id in(5,6)');await assert.rejects(call(identity.id,'snapshot'),/forbidden/);
+});
+test('unsupported legacy role denies access without implicit admin promotion',async()=>{
+ await db.exec("insert into public.employees values(7,900000007,'Unsupported fixture','Fixture','admin',true)");
+ assert.equal((await db.query('select public.dvfm_identity(900000007) as value')).rows[0].value,null);
 });

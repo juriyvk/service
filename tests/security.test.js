@@ -12,3 +12,11 @@ test('role fields never become trusted identity',async()=>assert.equal(await ver
 test('constant comparison rejects length mismatch',()=>{assert.ok(equal('abc','abc'));assert.ok(!equal('abc','ab'));});
 test('bot explicit command and self assignment',()=>{assert.deepEqual(parseTaskMessage('/task self | Test task | 2030-01-01'),{title:'Test task',due_date:'2030-01-01'});assert.throws(()=>parseTaskMessage('/task promote manager'));});
 test('document MIME and size allowlist',()=>{assert.equal(validateDocument({name:'fixture.pdf',mime:'application/pdf',size:123}).size,123);for(const d of [{name:'x',mime:'text/html',size:1},{name:'x',mime:'application/pdf',size:10485761},{name:'',mime:'application/pdf',size:1}])assert.throws(()=>validateDocument(d));});
+
+test('legacy HMAC contract accepts uppercase hex and 60 second clock tolerance',async()=>{
+ const p=new URLSearchParams(signed());p.set('hash',p.get('hash').toUpperCase());
+ assert.equal(await verifyInitData(p.toString(),token,1899999940),900000001);
+ await assert.rejects(verifyInitData(p.toString(),token,1899999939));
+ for(const auth_date of ['1.9e9',' 1900000000','1900000000.0'])await assert.rejects(verifyInitData(signed({auth_date}),token,1900000001));
+ await assert.rejects(verifyInitData('x'.repeat(8193),token,1900000001));
+});

@@ -1,0 +1,13 @@
+{
+  "environment": "staging",
+  "api_base": "https://wepogbvijpvyvyfzxzeo.supabase.co/functions/v1/",
+  "bot": "DVFMTESTCRM_bot",
+  "source": {
+    "index_sha256": "d7081495e6e34b469ab345406479dcb2e480d374f0ab0b7d6d2fc5f4908f665b",
+    "app_sha256": "3931c5caf0e87b50507c7aec15d09907581615c544aa71e5d0e2e12cedded9e4"
+  },
+  "output": {
+    "index_sha256": "f142756dc7b65fd4812a73d29987329eba6cf446f0721cf5cdc6af8dd7dfef28",
+    "app_sha256": "b3cb5ce8f9504ff2e1f148a919c2d3762a0bbe11fc17d403fe4420f3a1d39b9b"
+  }
+}

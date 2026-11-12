@@ -1,13 +1,88 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f6f7f5"><title>СЕРВИС | ДВФМ</title><script src="https://telegram.org/js/telegram-web-app.js"></script><style>
+<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#2E1D67"><title>СЕРВИС | ДВФМ</title><script src="https://telegram.org/js/telegram-web-app.js"></script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet"><style>
 :root{--bg:#f4f5f3;--white:#fff;--text:#25312b;--muted:#7d8981;--line:#e6eae6;--olive:#536c56;--soft:#e9eee7;--danger:#b44d49;--orange:#a67b32;--shadow:0 3px 20px rgba(20,35,25,.045)}*{box-sizing:border-box}body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,textarea,select{font:inherit}button{cursor:pointer}.app{max-width:740px;margin:auto;min-height:100dvh;padding:env(safe-area-inset-top) 16px calc(95px + env(safe-area-inset-bottom))}.top{display:flex;align-items:center;justify-content:space-between;padding:22px 0 18px}.identity{display:flex;align-items:center;gap:11px}.logo{background:#344c3d;color:white;width:42px;height:42px;display:grid;place-items:center;border-radius:14px;font-weight:800;letter-spacing:-1px}.brand{font-weight:800;letter-spacing:-.35px;font-size:16px}.sub{font-size:12px;color:var(--muted);margin-top:3px}.switch{border:1px solid var(--line);border-radius:12px;background:#fff;padding:8px;font-size:12px;color:var(--text)}h1{font-size:25px;margin:12px 0 5px;letter-spacing:-.7px}h2{font-size:17px;margin:0 0 12px}p{line-height:1.5}.hint{font-size:13px;color:var(--muted);margin:0 0 20px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0 22px}.stat,.card{background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow)}.stat{padding:16px 10px;text-align:center}.num{font-size:27px;font-weight:800;letter-spacing:-1px}.stat span{font-size:11px;color:var(--muted)}.toolbar{display:flex;justify-content:space-between;align-items:center;margin:22px 0 12px;gap:8px}.btn{border:0;background:var(--olive);color:#fff;padding:11px 14px;border-radius:11px;font-size:13px;font-weight:650}.btn:active{transform:scale(.99)}.ghost{border:1px solid var(--line);background:white;color:var(--text);padding:10px 12px;border-radius:11px;font-size:13px}.filters{display:flex;gap:7px;overflow:auto;margin:0 0 13px}.filter{border:1px solid var(--line);border-radius:10px;padding:9px 11px;color:#6b776f;background:#fff;font-size:12px;white-space:nowrap}.filter.active{background:var(--soft);border-color:#d7e3d6;color:#3d5e43;font-weight:700}.card{padding:15px;margin:9px 0}.cardrow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.overline{font-size:11px;color:var(--muted);margin-bottom:7px}.tasktitle{font-size:15px;font-weight:750;line-height:1.35;margin-bottom:8px}.details{font-size:12px;color:var(--muted);line-height:1.6}.pill{display:inline-block;border-radius:7px;padding:5px 8px;font-size:10px;font-weight:700;white-space:nowrap;background:#edf1ee;color:#57715d}.pill.progress{background:#eaf1ec;color:#4b7756}.pill.review{background:#fff3d9;color:#9c782e}.pill.overdue{background:#fcebe9;color:#af514b}.pill.done{background:#edf0ed;color:#6b776f}.section{margin-top:22px}.nav{position:fixed;bottom:0;bottom:env(safe-area-inset-bottom);left:0;right:0;z-index:3;background:rgba(255,255,255,.97);border-top:1px solid var(--line);display:flex;justify-content:center;padding:7px 6px 10px}.navinner{max-width:740px;width:100%;display:grid;grid-template-columns:repeat(5,1fr)}.nav button{border:0;background:none;display:flex;align-items:center;gap:4px;flex-direction:column;font-size:10px;color:#98a39a;padding:7px 0}.nav button.active{color:#3c6444;font-weight:800}.nav svg{width:21px;height:21px}.listitem{padding:14px 0;border-bottom:1px solid var(--line)}.listitem:last-child{border-bottom:0}.line{display:flex;align-items:center;justify-content:space-between;gap:10px}.small{font-size:12px;color:var(--muted)}.field{display:block;width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;background:#fff;color:var(--text);margin:7px 0 12px}.formlabel{font-size:12px;font-weight:700}textarea.field{min-height:90px;resize:vertical}.modalwrap{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;background:rgba(25,35,28,.4);z-index:20}.modalwrap.show{display:flex}.modal{background:#fff;border-radius:24px 24px 0 0;padding:20px 20px calc(26px + env(safe-area-inset-bottom));width:min(740px,100%);max-height:86dvh;overflow:auto}.modalhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}.close{border:0;background:#f3f5f2;border-radius:10px;width:32px;height:32px}.disclaimer{background:#ecf0e9;border-radius:12px;color:#566a59;padding:12px;font-size:12px;line-height:1.5}.empty{padding:24px 15px;text-align:center;color:var(--muted);font-size:13px}.spacer{height:20px}@media(min-width:680px){.app{padding-left:28px;padding-right:28px}.nav{bottom:0}}
-</style></head><body><main class="app"><header class="top"><div class="identity"><div class="logo">С</div><div><div class="brand">СЕРВИС | ДВФМ</div><div class="sub">Внутренняя платформа отдела</div></div></div><select class="switch" id="role"><option value="employee">Сотрудник</option><option value="manager">Руководитель</option></select></header><section id="content"></section></main><nav class="nav"><div class="navinner" id="nav"></div></nav><div class="modalwrap" id="modalwrap"><div class="modal"><div class="modalhead"><h2 id="modaltitle"></h2><button class="close" id="closemodal" aria-label="Закрыть">×</button></div><div id="modalbody"></div></div></div><script>
+
+/* === AНО «ДВФМ», 2024 brandbook. Mini App interface adaptation v0.3 === */
+:root{
+ --bg:#faf6f0;--white:#fff;--text:#2B2135;--muted:#777080;--line:#ebe3ee;
+ --olive:#00A552;--soft:#ecfaf3;--danger:#E73B2B;--orange:#FBBA00;
+ --violet:#2E1D67;--green:#00A552;--yellow:#FBBA00;--pink:#EB5893;
+ --beige:#F0D8C2;--shadow:0 10px 28px rgba(46,29,103,.065);
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{font-family:'Onest','Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);}
+button,input,textarea,select{font-family:'Onest','Montserrat',system-ui,sans-serif}
+.app{max-width:780px;padding-left:16px;padding-right:16px;padding-bottom:calc(100px + env(safe-area-inset-bottom));}
+.top{padding:19px 0 17px;position:relative}
+.top::after{content:"";height:3px;position:absolute;bottom:0;left:0;right:0;background:linear-gradient(90deg,var(--green) 0 26%,var(--yellow) 26% 49%,var(--pink) 49% 75%,var(--violet) 75% 100%);border-radius:99px;opacity:.9}
+.logo{background:var(--violet);height:42px;width:42px;border-radius:13px;color:#fff;position:relative;overflow:hidden;box-shadow:0 5px 16px rgba(46,29,103,.14);font-family:'Onest',sans-serif;font-weight:900;z-index:0}
+.logo::before{content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:var(--yellow);right:-10px;top:-8px;z-index:-1}
+.logo::after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:var(--pink);left:-12px;bottom:-9px;z-index:-1}
+.brand{font-weight:800;font-size:16px;letter-spacing:-.45px;color:var(--violet)}
+.sub{color:#80768b;font-size:11px}
+.switch{border:1px solid #eadfeb;background:#fff;color:#5a4b74;max-width:49%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;box-shadow:0 2px 9px rgba(46,29,103,.04)}
+h1{font-size:24px;letter-spacing:-.7px;color:var(--violet);font-weight:800;margin-top:18px}
+h2{font-weight:800;letter-spacing:-.3px;color:var(--violet)}
+.hint{font-size:12px;color:var(--muted);margin-bottom:16px}
+.welcome{position:relative;isolation:isolate;background:var(--violet);border-radius:23px;min-height:135px;margin:17px 0 20px;padding:21px 20px;overflow:hidden;color:#fff;box-shadow:0 12px 28px rgba(46,29,103,.16)}
+.welcome::before{content:"";position:absolute;right:-40px;top:-65px;width:205px;height:205px;border-radius:50%;background:conic-gradient(from 6deg,var(--yellow) 0deg 88deg,transparent 88deg 127deg,var(--pink) 127deg 214deg,transparent 214deg 249deg,var(--green) 249deg 338deg,transparent 338deg);-webkit-mask:radial-gradient(circle,transparent 0 45px,#000 47px);mask:radial-gradient(circle,transparent 0 45px,#000 47px);z-index:-1}
+.welcome::after{content:"";position:absolute;right:57px;bottom:-29px;width:66px;height:66px;background:var(--pink);border-radius:50%;opacity:.77;z-index:-1}
+.welcome-tag{font-size:10px;letter-spacing:1.15px;text-transform:uppercase;color:#f7d3e8;font-weight:800;margin-bottom:8px}
+.welcome-title{font-size:22px;font-weight:900;letter-spacing:-.8px;line-height:1.1;max-width:240px}
+.welcome-note{font-size:12px;line-height:1.45;margin-top:8px;max-width:235px;color:#eee8fa}
+.stats{gap:9px;margin:13px 0 23px}
+.stat{border:0;box-shadow:var(--shadow);border-radius:17px;min-height:89px;padding:15px 5px;background:#fff}
+.stat:first-child{background:#fff}
+.stat:nth-child(2){background:#e6f6ee}
+.stat:nth-child(3){background:#fff1f5}
+.num{color:var(--violet);font-weight:900;font-size:29px}
+.stat:nth-child(2) .num{color:#007e44}
+.stat:nth-child(3) .num{color:#c4375e}
+.stat span{font-size:11px;font-weight:650;color:#71677b}
+.toolbar{margin-top:19px;margin-bottom:13px}
+.btn{background:var(--green);color:white;border-radius:12px;font-weight:800;font-size:12px;box-shadow:0 4px 10px rgba(0,165,82,.12)}
+.btn:hover{background:#008a47}
+.ghost{color:var(--violet);border:1px solid #e7e0ec;font-weight:650}
+.filters{gap:7px;margin-bottom:14px}
+.filter{font-size:12px;border-color:#e9e1e8;background:#fff;color:#776a7d;border-radius:11px}
+.filter.active{background:var(--violet);border-color:var(--violet);color:#fff}
+.card{background:rgba(255,255,255,.98);border:1px solid #efe9ef;border-radius:17px;box-shadow:var(--shadow);padding:16px;margin:10px 0;position:relative;overflow:hidden}
+.card[data-task]::before{content:"";position:absolute;width:4px;top:0;bottom:0;left:0;background:#c9b8e5}
+.card[data-task]:has(.pill.progress)::before{background:var(--green)}
+.card[data-task]:has(.pill.overdue)::before{background:var(--danger)}
+.card[data-task]:has(.pill.review)::before{background:var(--yellow)}
+.card[data-task]:has(.pill.done)::before{background:var(--violet)}
+.tasktitle{font-size:14px;font-weight:800;color:#30213e;letter-spacing:-.15px}
+.overline{color:#98849b;font-weight:700;font-size:10px}
+.details{color:#81798b;font-size:11px}
+.pill{background:#f1eef8;color:var(--violet);font-weight:800;border-radius:8px;padding:6px 8px}
+.pill.progress{background:#e1f6ea;color:#007f43}
+.pill.review{background:#fff1ce;color:#8a6000}
+.pill.overdue{background:#ffe8e6;color:#ce322b}
+.pill.done{background:#eee8fa;color:#5a3f94}
+.disclaimer{background:#f7f0fb;color:#756985;border:1px solid #f0e6f3;font-size:11px;border-radius:14px;line-height:1.55}
+.nav{background:rgba(255,255,255,.98);border-top:0;box-shadow:0 -6px 22px rgba(46,29,103,.07);padding-top:11px}
+.nav::before{content:"";position:absolute;top:0;height:3px;left:0;right:0;background:linear-gradient(90deg,var(--yellow),var(--green),var(--pink),var(--violet));}
+.nav button{color:#a097ad;font-weight:650}
+.nav button.active{color:var(--violet);font-weight:900}
+.nav button.active svg{stroke:var(--violet)}
+.field{border-color:#e3dce8;background:#fff;outline-color:#8d75ca}
+.formlabel{color:var(--violet)}
+.modalwrap{background:rgba(30,15,65,.46)}
+.modal{border-radius:27px 27px 0 0}
+.close{color:var(--violet);background:#f4effa}
+@media(min-width:680px){.app{padding-left:32px;padding-right:32px}.welcome{min-height:163px;padding:28px}.welcome-title{font-size:27px;max-width:360px}.welcome-note{max-width:360px}.welcome::before{width:270px;height:270px;right:-30px;top:-80px;-webkit-mask:radial-gradient(circle,transparent 0 65px,#000 67px);mask:radial-gradient(circle,transparent 0 65px,#000 67px)}}
+@media(max-width:360px){.welcome::before{right:-85px}.welcome-title{font-size:20px}.switch{max-width:42%;font-size:10px}.sub{font-size:10px}}
+@media(prefers-reduced-motion:no-preference){.card,.btn,.filter{transition:box-shadow .18s,transform .18s,background .18s}.card[data-task]:active{transform:scale(.994)}}
+
+</style></head><body><main class="app"><header class="top"><div class="identity"><div class="logo">С</div><div><div class="brand">СЕРВИС | ДВФМ</div><div class="sub">Внутренняя платформа отдела</div></div></div><span class="switch" id="roleLabel">Проверка входа…</span></header><section id="content"></section></main><nav class="nav"><div class="navinner" id="nav"></div></nav><div class="modalwrap" id="modalwrap"><div class="modal"><div class="modalhead"><h2 id="modaltitle"></h2><button class="close" id="closemodal" aria-label="Закрыть">×</button></div><div id="modalbody"></div></div></div><script>
 const tg=window.Telegram?.WebApp;try{tg?.ready();tg?.expand();}catch(e){}
 const icons={home:'<path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/>',projects:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4"/>',requests:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 2v4m8-4v4M3 10h18m-13 5h8"/>',team:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5"/>',help:'<path d="M3 5a2 2 0 0 1 2-2h7v18H5a2 2 0 0 0-2 0zM21 5a2 2 0 0 0-2-2h-7v18h7a2 2 0 0 1 2 0z"/>'};const svg=k=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+icons[k]+'</svg>';
 const demo=[{id:1,title:'Согласовать заявку на трансфер',project:'Байконур',person:'Сергей',date:'2026-11-16',status:'В работе'},{id:2,title:'Проверить отчётность подрядчика',project:'БРИКС+',person:'Влад',date:'2026-11-10',status:'Просрочено'},{id:3,title:'Подготовить реестр размещения',project:'ПММФ',person:'Лилия',date:'2026-11-18',status:'На согласовании'},{id:4,title:'Обновить статус проезда',project:'Форум',person:'Илья',date:'2026-11-20',status:'Выполнено'}];
-let tasks=JSON.parse(localStorage.getItem('dvfm_demo_tasks')||'null')||demo;let requests=JSON.parse(localStorage.getItem('dvfm_demo_requests')||'[]');let tab='home',filter='all',helpSearch='';const role=document.getElementById('role');role.value=localStorage.getItem('dvfm_demo_role')||'employee';role.addEventListener('change',()=>{localStorage.setItem('dvfm_demo_role',role.value);render()});const save=()=>localStorage.setItem('dvfm_demo_tasks',JSON.stringify(tasks));const fmt=x=>x?new Date(x+'T12:00:00').toLocaleDateString('ru-RU'):'—';const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const statusClass=s=>({'В работе':'progress','На согласовании':'review','Просрочено':'overdue','Выполнено':'done'}[s]||'');const pill=s=>`<span class="pill ${statusClass(s)}">${esc(s)}</span>`;
+let tasks=JSON.parse(localStorage.getItem('dvfm_demo_tasks')||'null')||demo;let requests=JSON.parse(localStorage.getItem('dvfm_demo_requests')||'[]');let tab='home',filter='all',helpSearch='';let role={value:'employee'};const save=()=>localStorage.setItem('dvfm_demo_tasks',JSON.stringify(tasks));const fmt=x=>x?new Date(x+'T12:00:00').toLocaleDateString('ru-RU'):'—';const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const statusClass=s=>({'В работе':'progress','На согласовании':'review','Просрочено':'overdue','Выполнено':'done'}[s]||'');const pill=s=>`<span class="pill ${statusClass(s)}">${esc(s)}</span>`;
 function renderNav(){const pages=[['home','Задачи','home'],['projects','Проекты','projects'],['requests','Заявки','requests'],['team','Команда','team'],['help','Справка','help']];document.getElementById('nav').innerHTML=pages.map(([k,t,i])=>`<button data-tab="${k}" class="${tab===k?'active':''}">${svg(i)}<span>${t}</span></button>`).join('');document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render()})}
-function render(){renderNav();const c=document.getElementById('content');if(tab==='home'){const count=s=>tasks.filter(t=>t.status===s).length;const view=tasks.filter(t=>filter==='all'||filter==='active'&&t.status!=='Выполнено'||filter==='done'&&t.status==='Выполнено');c.innerHTML=`<h1>${role.value==='manager'?'Задачи отдела':'Мои задачи'}</h1><p class="hint">Поручения, сроки и контроль выполнения</p><div class="stats"><div class="stat"><div class="num">${tasks.length}</div><span>Всего</span></div><div class="stat"><div class="num">${count('В работе')}</div><span>В работе</span></div><div class="stat"><div class="num" style="color:var(--danger)">${count('Просрочено')}</div><span>Просрочено</span></div></div><div class="toolbar"><h2>Задачи</h2><button class="btn" id="addtask">+ Новая задача</button></div><div class="filters">${[['all','Все'],['active','Активные'],['done','Завершённые']].map(([v,t])=>`<button class="filter ${filter===v?'active':''}" data-filter="${v}">${t}</button>`).join('')}</div>${view.map(t=>`<div class="card" data-task="${t.id}"><div class="cardrow"><div class="overline">${esc(t.project)}</div>${pill(t.status)}</div><div class="tasktitle">${esc(t.title)}</div><div class="details">Ответственный: ${esc(t.person)} · Срок: ${fmt(t.date)}</div></div>`).join('')||'<div class="empty">Задач в этой категории нет</div>'}<p class="disclaimer">Демо-режим: данные сохраняются только в браузере текущего устройства. Настоящие роли, доступ сотрудников и уведомления будут работать после подключения сервера.</p>`;document.getElementById('addtask').onclick=showTaskForm;document.querySelectorAll('[data-task]').forEach(el=>el.onclick=()=>showTask(Number(el.dataset.task)));document.querySelectorAll('[data-filter]').forEach(el=>el.onclick=()=>{filter=el.dataset.filter;render()})}
+function render(){renderNav();const c=document.getElementById('content');if(tab==='home'){const count=s=>tasks.filter(t=>t.status===s).length;const view=tasks.filter(t=>filter==='all'||filter==='active'&&t.status!=='Выполнено'||filter==='done'&&t.status==='Выполнено');c.innerHTML=`<section class="welcome" aria-label="Рабочее пространство"><div class="welcome-tag">Внутренняя платформа ДВФМ</div><div class="welcome-title">Начинаем рабочий день вместе</div><div class="welcome-note">Задачи, сроки и статус сервиса — всё под рукой.</div></section><h1>${role.value==='manager'?'Задачи отдела':'Мои задачи'}</h1><p class="hint">Поручения, сроки и контроль выполнения</p><div class="stats"><div class="stat"><div class="num">${tasks.length}</div><span>Всего</span></div><div class="stat"><div class="num">${count('В работе')}</div><span>В работе</span></div><div class="stat"><div class="num" style="color:var(--danger)">${count('Просрочено')}</div><span>Просрочено</span></div></div><div class="toolbar"><h2>Задачи</h2><button class="btn" id="addtask">+ Новая задача</button></div><div class="filters">${[['all','Все'],['active','Активные'],['done','Завершённые']].map(([v,t])=>`<button class="filter ${filter===v?'active':''}" data-filter="${v}">${t}</button>`).join('')}</div>${view.map(t=>`<div class="card" data-task="${t.id}"><div class="cardrow"><div class="overline">${esc(t.project)}</div>${pill(t.status)}</div><div class="tasktitle">${esc(t.title)}</div><div class="details">Ответственный: ${esc(t.person)} · Срок: ${fmt(t.date)}</div></div>`).join('')||'<div class="empty">Задач в этой категории нет</div>'}<p class="disclaimer">Демо-режим: данные сохраняются только в браузере текущего устройства. Настоящие роли, доступ сотрудников и уведомления будут работать после подключения сервера.</p>`;document.getElementById('addtask').onclick=showTaskForm;document.querySelectorAll('[data-task]').forEach(el=>el.onclick=()=>showTask(Number(el.dataset.task)));document.querySelectorAll('[data-filter]').forEach(el=>el.onclick=()=>{filter=el.dataset.filter;render()})}
 else if(tab==='projects'){const data=[['Байконур','22–25 ноября','Проезд, трансфер, проживание'],['БРИКС+','9–15 ноября','Проезд, трансфер, проживание, страховки'],['ПММФ','Даты уточняются','Сервисы по заявкам']];c.innerHTML=`<h1>Мероприятия</h1><p class="hint">Проекты и сервисное сопровождение</p>${data.map(x=>`<div class="card"><div class="overline">${x[1]}</div><div class="tasktitle">${x[0]}</div><div class="details">${x[2]}</div></div>`).join('')}<p class="disclaimer">Состав и статусы здесь показаны для демонстрации структуры. Данные ещё не синхронизированы с реальными мероприятиями.</p>`}
 else if(tab==='requests'){c.innerHTML=`<h1>Заявки</h1><p class="hint">Отпуска, командировки и отгулы</p><button class="btn" id="addrequest">+ Создать заявку</button><div class="section">${requests.map(r=>`<div class="card"><div class="cardrow"><b>${esc(r.type)}</b>${pill('На согласовании')}</div><div class="details">${esc(r.start)} — ${esc(r.end)} · ${esc(r.comment)}</div></div>`).join('')||'<div class="empty">Ваших демонстрационных заявок пока нет</div>'}</div><p class="disclaimer">Подача заявок пока является макетом и не заменяет официального кадрового согласования.</p>`;document.getElementById('addrequest').onclick=showRequestForm}
 else if(tab==='team'){c.innerHTML=`<h1>Команда</h1><p class="hint">Роли и зоны ответственности</p>${[['Руководитель','Управление отделом, отели'],['Заместитель','Проезд и аналитика'],['Проезд','Авиа- и железнодорожные перевозки'],['Проживание','Кампус и отели'],['Транспорт','Трансферы и маршруты'],['Питание','Организация питания'],['Медицина','Медицинское сопровождение']].map(x=>`<div class="card"><div class="tasktitle">${x[0]}</div><div class="details">${x[1]}</div></div>`).join('')}`}
@@ -18,58 +93,34 @@ function closeModal(){document.getElementById('modalwrap').classList.remove('sho
 function showTaskForm(){modal('Новая задача',`<form id="modalform"><label class="formlabel">Название</label><input name="title" class="field" required maxlength="120" placeholder="Что нужно сделать?"><label class="formlabel">Мероприятие</label><input name="project" class="field" required placeholder="Например, Байконур"><label class="formlabel">Ответственный</label><input name="person" class="field" required placeholder="Имя сотрудника"><label class="formlabel">Срок</label><input name="date" class="field" required type="date"><button class="btn" style="width:100%">Создать задачу</button></form>`,f=>{tasks.unshift({id:Date.now(),title:f.get('title'),project:f.get('project'),person:f.get('person'),date:f.get('date'),status:'В работе'});save();closeModal();render()})}
 function showTask(id){const t=tasks.find(x=>x.id===id);if(!t)return;modal(t.title,`<div class="details">${esc(t.project)} · ${esc(t.person)} · ${fmt(t.date)}</div><div class="spacer"></div><form id="modalform"><label class="formlabel">Статус</label><select class="field" name="status">${['В работе','На согласовании','Просрочено','Выполнено'].map(s=>`<option ${t.status===s?'selected':''}>${s}</option>`).join('')}</select><button class="btn" style="width:100%">Сохранить статус</button></form>`,f=>{t.status=f.get('status');save();closeModal();render()})}
 function showRequestForm(){modal('Новая заявка',`<form id="modalform"><label class="formlabel">Тип заявки</label><select class="field" name="type"><option>Отпуск</option><option>Командировка</option><option>Отгул</option></select><label class="formlabel">Начало</label><input class="field" name="start" type="date" required><label class="formlabel">Окончание</label><input class="field" name="end" type="date" required><label class="formlabel">Комментарий</label><textarea class="field" name="comment" placeholder="Дополнительная информация"></textarea><button class="btn" style="width:100%">Отправить заявку (демо)</button></form>`,f=>{if(f.get('end')<f.get('start')){alert('Дата окончания должна быть не раньше начала');return}requests.unshift(Object.fromEntries(f.entries()));localStorage.setItem('dvfm_demo_requests',JSON.stringify(requests));closeModal();render()})}
-
-async function checkTelegramAuth() {
-  const content = document.getElementById('content');
-  const nav = document.getElementById('nav');
-  const roleSelect = document.getElementById('role');
-
-  nav.innerHTML = '';
-  roleSelect.style.display = 'none';
-  content.innerHTML = '<h2>Проверяем доступ через Telegram…</h2>';
-
-  const initData = window.Telegram?.WebApp?.initData;
-
-  if (!initData) {
-    content.innerHTML = '<h2>Откройте приложение через @dvfm_service_bot</h2>';
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      'https://mskbgkiksgpdosiarjvo.supabase.co/functions/v1/telegram-auth',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ initData }),
-        cache: 'no-store'
-      }
-    );
-
-    const result = await response.json();
-
-    if (!response.ok || !result.ok) {
-      content.innerHTML = '<h2>Доступ не подтверждён</h2><p>Код: ' + response.status + '</p>';
-      return;
-    }
-
-    const employee = result.employee;
-
-    roleSelect.value = ['manager', 'admin', 'deputy'].includes(employee.role)
-      ? 'manager'
-      : 'employee';
-
-    render();
-
-    content.insertAdjacentHTML(
-      'afterbegin',
-      '<p class="hint">Вход подтверждён. Демонстрационный режим.</p>'
-    );
-  } catch (error) {
-    content.innerHTML = '<h2>Ошибка подключения к серверу</h2><p>Проверьте Edge Function и её Logs.</p>';
-  }
+// Identity gate: this is NOT a session. Subsequent data operations must independently authenticate.
+const authEndpoint='https://mskbgkiksgpdosiarjvo.supabase.co/functions/v1/telegram-auth';
+const contentNode=document.getElementById('content');
+const navNode=document.getElementById('nav');
+function gate(title, detail, allowRetry=false){
+  navNode.innerHTML='';
+  contentNode.innerHTML=`<h1>${esc(title)}</h1><div class="card"><p>${esc(detail)}</p>${allowRetry?'<button class="btn" id="retry-auth">Повторить проверку</button>':''}</div>`;
+  if(allowRetry)document.getElementById('retry-auth').onclick=checkTelegramAuth;
 }
-
-checkTelegramAuth();
-</script></body></html>
-
+async function checkTelegramAuth(){
+  gate('Проверка доступа','Проверяем вход через Telegram…');
+  const initData=tg?.initData;
+  if(!initData){gate('Откройте через Telegram','Для входа используйте кнопку «Открыть платформу» в @dvfm_service_bot. Обычный браузер не передаёт подписанные данные Telegram.');return;}
+  try{
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),12000);
+    let resp;
+    try{resp=await fetch(authEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData}),signal:controller.signal,cache:'no-store'});}
+    finally{clearTimeout(timeout)}
+    const result=await resp.json().catch(()=>({}));
+    if(!resp.ok||!result.ok){
+      const userMessage=resp.status===403?'Ваш Telegram-аккаунт пока не зарегистрирован в системе.':resp.status===401?'Данные входа устарели или не прошли проверку. Закройте приложение и откройте заново через бота.':resp.status===500?'Сервер авторизации пока не настроен. Проверьте Secrets и Logs функции.':'Не удалось подтвердить доступ. HTTP '+resp.status;
+      gate('Доступ не подтверждён',userMessage,true);return;
+    }
+    const employee=result.employee;
+    role.value=['manager','admin','deputy'].includes(employee.role)?'manager':'employee';
+    document.getElementById('roleLabel').textContent=employee.full_name+' · '+(role.value==='manager'?'Руководитель':'Сотрудник');
+    render();
+  }catch(err){gate('Нет связи с сервером','Не удалось связаться с telegram-auth. Проверьте подключение, развертывание Edge Function и журнал Logs.',true);}
+}
+checkTelegramAuth();</script></body></html>

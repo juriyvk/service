@@ -67,3 +67,15 @@ node scripts/build-staging.mjs --check
 | worker=1 с заведомо неверным Authorization | 503, Server configuration missing |
 
 Последние ответы показывают, что TELEGRAM_WEBHOOK_SECRET и OUTBOX_WORKER_AUTH ещё не настроены в staging. Функции исполняются и не дают неавторизованный доступ; действительные webhook/worker операции ещё не проверены. Следующий шаг: сохранить два независимых случайных секрета в Supabase Secrets. TELEGRAM_WEBHOOK_SECRET — 48–64 символа из латиницы/цифр (также Telegram разрешает _ и -); OUTBOX_WORKER_AUTH — строка Bearer, пробел и другая случайная строка. Значения не передавать в чат или GitHub. TELEGRAM_MINI_APP_URL будет настроен после подготовки отдельного HTTPS-адреса тестового Mini App.
+
+## Настройка webhook без передачи токена бота
+
+После заполнения Secrets повторные запросы с заведомо неверными значениями к webhook/worker вернули 401 Unauthorized вместо 503. Действительные секреты при этих проверках не использовались и нигде в репозитории не сохраняются.
+
+Для Dashboard подготовлен временный helper `staging-telegram-setup` (canonical: supabase/functions/staging-telegram-setup/index.ts; standalone: deploy/dashboard/staging-telegram-setup.ts). Развернуть в тестовом проекте с Verify JWT disabled. Он сам проверяет Authorization на полное значение OUTBOX_WORKER_AUTH; до проверки сеть не вызывается. Helper жёстко ограничен staging wepogbvijpvyvyfzxzeo и ботом DVFMTESTCRM_bot: production-проект и другой bot token дают отказ до изменения Telegram.
+
+В Dashboard → функция → Test выполнить POST с заголовком Authorization, равным полному OUTBOX_WORKER_AUTH из своего менеджера паролей. Не включать секрет в URL или тело запроса. Тело для чтения: `{"action":"inspect"}`; тело для настройки: `{"action":"configure"}`. Configure получает bot token/webhook secret из Secrets, проверяет getMe, отказывается перезаписывать webhook с другим URL, вызывает setWebhook только для фиксированного staging endpoint и сохраняет pending updates (drop_pending_updates=false). Ответ содержит только username, URL, флаг configured и число pending updates, без секретов.
+
+Ожидаемый результат configure: ok=true, bot=DVFMTESTCRM_bot, configured=true, webhook_url=https://wepogbvijpvyvyfzxzeo.supabase.co/functions/v1/telegram-webhook. После завершения настройки helper можно удалить из развёрнутых Edge Functions. Worker secret в production не даёт административных прав через этот helper: проверка project URL запрещает работу вне указанного staging. Helper не принимает URL назначения или username от клиента.
+
+Подключённый webhook ещё не означает успешную обработку личных сообщений: реестр staging сейчас пуст. Проверка зарегистрированного actor, документов, Mini App и доставки уведомлений остаётся отдельным этапом. Существующий рабочий бот и production endpoint не меняются.

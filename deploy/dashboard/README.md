@@ -15,3 +15,5 @@ Rebuild after changing any canonical function:
 ```sh
 node scripts/build-dashboard.mjs
 ```
+
+`staging-telegram-setup.ts` is a temporary staging-only administrative helper. It requires the stored worker Authorization value, refuses all projects except wepogbvijpvyvyfzxzeo, verifies the exact test bot username and never accepts a caller-supplied destination. In Dashboard Test, POST `{"action":"configure"}` with the Authorization header from the private secret store. This configures the fixed staging webhook using Secrets without exposing the bot token. Delete the deployed helper after setup if no longer needed. Do not deploy this helper to production.

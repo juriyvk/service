@@ -1,7 +1,7 @@
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import ts from 'typescript';
 const root=new URL('../',import.meta.url);
-const names=['telegram-auth','crm','telegram-webhook'];
+const names=['telegram-auth','crm','telegram-webhook','staging-telegram-setup'];
 function removeImports(source,path){
  const ast=ts.createSourceFile(path,source,ts.ScriptTarget.Latest,true);
  const imports=ast.statements.filter(ts.isImportDeclaration);

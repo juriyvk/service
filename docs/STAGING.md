@@ -50,3 +50,20 @@ node scripts/build-staging.mjs --check
 | GET | 405, POST required |
 
 Ответы относятся к приложению, а не отказу gateway JWT: canonical обработчик исполняется. Наличие TELEGRAM_BOT_TOKEN достаточно для достижения проверки подписи, но совпадение токена с @DVFMTESTCRM_bot и успешная авторизация по действительной подписи этим не проверены. Для этого требуется отдельная приёмка через Telegram Mini App. Не сохранять действительный initData в GitHub или переписке.
+
+## Проверка развёрнутых crm и telegram-webhook
+
+13 ноября 2026 (московское время) проверены staging endpoints без действительных credentials и без изменения данных:
+
+| Запрос | Ответ |
+| --- | --- |
+| crm, пустой JSON | 401, Invalid Telegram data |
+| crm, некорректный initData | 401, Invalid signature |
+| crm, origin вне списка | 403, Origin forbidden |
+| crm, OPTIONS от https://juriyvk.github.io | 204 с ожидаемым Access-Control-Allow-Origin |
+| telegram-webhook без secret | 401, Unauthorized |
+| telegram-webhook с заведомо неверным secret | 503, Server configuration missing |
+| worker=1 без Authorization | 401, Unauthorized |
+| worker=1 с заведомо неверным Authorization | 503, Server configuration missing |
+
+Последние ответы показывают, что TELEGRAM_WEBHOOK_SECRET и OUTBOX_WORKER_AUTH ещё не настроены в staging. Функции исполняются и не дают неавторизованный доступ; действительные webhook/worker операции ещё не проверены. Следующий шаг: сохранить два независимых случайных секрета в Supabase Secrets. TELEGRAM_WEBHOOK_SECRET — 48–64 символа из латиницы/цифр (также Telegram разрешает _ и -); OUTBOX_WORKER_AUTH — строка Bearer, пробел и другая случайная строка. Значения не передавать в чат или GitHub. TELEGRAM_MINI_APP_URL будет настроен после подготовки отдельного HTTPS-адреса тестового Mini App.

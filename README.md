@@ -5,6 +5,7 @@
 - [Развёртывание, перенос авторизации и откат](docs/DEPLOY.md)
 - [Права и архитектура](docs/ARCHITECTURE.md)
 - [Первый запуск тестового Supabase](docs/STAGING.md)
+- [Ручная приёмка staging](docs/ACCEPTANCE.md)
 
 ```sh
 npm ci

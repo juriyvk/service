@@ -1,0 +1,8 @@
+[functions.telegram-auth]
+verify_jwt = false
+[functions.crm]
+verify_jwt = false
+[functions.telegram-webhook]
+verify_jwt = false
+[functions.staging-telegram-setup]
+verify_jwt = false

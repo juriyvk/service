@@ -188,11 +188,20 @@ serve(async (req) => {
     if (env('SUPABASE_URL').replace(/\/$/, '') !== project)
         throw new HttpError(403, 'Staging project required');
     const input = await body(req);
-    if (!['inspect', 'configure'].includes(input.action))
-        throw new HttpError(400, 'Use inspect or configure');
+    if (!['inspect', 'configure', 'configure_worker'].includes(input.action))
+        throw new HttpError(400, 'Use inspect, configure or configure_worker');
     const me = await telegram('getMe', {});
     if (!me.is_bot || me.username?.toLowerCase() !== botUsername.toLowerCase())
         throw new HttpError(409, 'Staging bot token does not match expected username');
+    if (input.action === 'configure_worker') {
+        const link = new URL(taskLink('00000000-0000-4000-8000-000000000000'));
+        if (!/^\/DVFMTESTCRM_bot(?:\/[A-Za-z0-9_]+)?\/?$/i.test(link.pathname))
+            throw new HttpError(503, 'Mini App link must use the staging bot');
+        if (link.pathname.split('/').filter(Boolean).length === 1 && !me.has_main_web_app)
+            throw new HttpError(409, 'Enable the staging bot Main Mini App in BotFather first');
+        const worker = await rpc('dvfm_staging_configure_worker', { p_worker_auth: env('OUTBOX_WORKER_AUTH') });
+        return json({ ok: true, bot: me.username, worker });
+    }
     const url = project + '/functions/v1/telegram-webhook';
     let info = await telegram('getWebhookInfo', {});
     if (input.action === 'configure') {

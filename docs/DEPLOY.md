@@ -29,7 +29,7 @@
 | `TELEGRAM_BOT_TOKEN` | Токен соответствующего staging/production-бота |
 | `ALLOWED_ORIGINS` | Точные HTTPS origins Mini App через запятую, без завершающего `/`; при отсутствии используется прежний `https://juriyvk.github.io` |
 | `TELEGRAM_WEBHOOK_SECRET` | Случайный независимый секрет 32+ символа, только A-Z/a-z/0-9/_/- |
-| `TELEGRAM_MINI_APP_URL` | Именованная ссылка BotFather: `https://t.me/<bot>/<app>` |
+| `TELEGRAM_MINI_APP_URL` | Ссылка Main Mini App `https://t.me/<bot>` после включения Main Mini App в BotFather, либо named-ссылка `https://t.me/<bot>/<app>` |
 | `OUTBOX_WORKER_AUTH` | Полная строка `Bearer <случайный независимый секрет>` для worker |
 
 `SUPABASE_URL` и `SUPABASE_SERVICE_ROLE_KEY` предоставляет Supabase runtime. Никогда не помещать service key, bot token или webhook secret в `app.js`.

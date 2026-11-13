@@ -6,6 +6,7 @@
 - [Права и архитектура](docs/ARCHITECTURE.md)
 - [Первый запуск тестового Supabase](docs/STAGING.md)
 - [Ручная приёмка staging](docs/ACCEPTANCE.md)
+- [Уведомления, deep links и scheduler](docs/NOTIFICATIONS.md)
 
 ```sh
 npm ci

@@ -1,5 +1,5 @@
 export class HttpError extends Error {
-  constructor(status, message) { super(message); this.status = status; }
+  constructor(status, message, code = '') { super(message); this.status = status; this.code = code; }
 }
 export function equal(a, b) {
   const x = new TextEncoder().encode(a), y = new TextEncoder().encode(b);

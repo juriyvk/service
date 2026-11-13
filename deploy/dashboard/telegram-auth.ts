@@ -2,7 +2,7 @@
 // GENERATED JavaScript for pasting into Dashboard index.ts. Do not edit.
 // Canonical typed sources: supabase/functions/. Rebuild: node scripts/build-dashboard.mjs
 export class HttpError extends Error {
-    constructor(status, message) { super(message); this.status = status; }
+    constructor(status, message, code = '') { super(message); this.status = status; this.code = code; }
 }
 export function equal(a, b) {
     const x = new TextEncoder().encode(a), y = new TextEncoder().encode(b);
@@ -74,7 +74,8 @@ export async function rpc(name, args) {
     const data = await r.json();
     if (!r.ok) {
         const status = data.code === '42501' ? 403 : data.code === '40001' ? 409 : 400;
-        throw new HttpError(status, status === 409 ? 'Данные изменились. Обновите задачу.' : status === 403 ? 'Доступ запрещён' : 'Некорректные данные или переход статуса');
+        const code = typeof data.code === 'string' && /^(?:[A-Z0-9]{5}|PGRST[0-9]{3})$/.test(data.code) ? data.code : '';
+        throw new HttpError(status, status === 409 ? 'Данные изменились. Обновите задачу.' : status === 403 ? 'Доступ запрещён' : 'Некорректные данные или переход статуса', code);
     }
     return data;
 }

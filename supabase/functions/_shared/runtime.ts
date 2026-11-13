@@ -3,7 +3,7 @@ export const env = (name: string) => { const v=Deno.env.get(name); if(!v) throw 
 export function json(data: unknown,status=200,headers:Record<string,string>={}) { return new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store',...headers}}); }
 export async function rpc(name:string,args:unknown) {
  const r=await fetch(`${env('SUPABASE_URL')}/rest/v1/rpc/${name}`,{method:'POST',headers:{apikey:env('SUPABASE_SERVICE_ROLE_KEY'),Authorization:`Bearer ${env('SUPABASE_SERVICE_ROLE_KEY')}`,'Content-Type':'application/json'},body:JSON.stringify(args),signal:AbortSignal.timeout(15000)});
- const data=await r.json(); if(!r.ok) { const status=data.code==='42501'?403:data.code==='40001'?409:400; throw new HttpError(status,status===409?'Данные изменились. Обновите задачу.':status===403?'Доступ запрещён':'Некорректные данные или переход статуса'); } return data;
+ const data=await r.json(); if(!r.ok) { const status=data.code==='42501'?403:data.code==='40001'?409:400; const code=typeof data.code==='string'&&/^(?:[A-Z0-9]{5}|PGRST[0-9]{3})$/.test(data.code)?data.code:''; throw new HttpError(status,status===409?'Данные изменились. Обновите задачу.':status===403?'Доступ запрещён':'Некорректные данные или переход статуса',code); } return data;
 }
 export async function identity(initData:string) {
  const id=await verifyInitData(initData,env('TELEGRAM_BOT_TOKEN'));

@@ -33,5 +33,6 @@ begin
 end $$;
 revoke all on function public.dvfm_staging_configure_worker(text) from public,anon,authenticated;
 grant execute on function public.dvfm_staging_configure_worker(text) to service_role;
+notify pgrst, 'reload schema';
 commit;
 select 'staging_worker_configurator_ready' as status;

@@ -10,10 +10,12 @@ if(sourceApp.split(sourceBase).length!==2)throw new Error('Expected one canonica
 const app=sourceApp.replace(sourceBase,targetBase).replace('@dvfm_service_bot','@DVFMTESTCRM_bot');
 const html=sourceHtml.replace('<title>СЕРВИС | ДВФМ</title>','<meta name="robots" content="noindex"><title>СЕРВИС | ДВФМ — тестовая среда</title>').replace('Внутренняя платформа отдела','Тестовая среда · DVFMTESTCRM_bot');
 const hash=s=>createHash('sha256').update(s).digest('hex');
+const sourceYougile=await readFile(new URL('yougile-ui.js',root),'utf8');
 const files={
  'index.html':html,
  'app.js':app,
- 'manifest.json':JSON.stringify({environment:'staging',api_base:targetBase,bot:'DVFMTESTCRM_bot',source:{index_sha256:hash(sourceHtml),app_sha256:hash(sourceApp)},output:{index_sha256:hash(html),app_sha256:hash(app)}},null,2)+'\n'
+ 'yougile-ui.js':sourceYougile,
+ 'manifest.json':JSON.stringify({environment:'staging',api_base:targetBase,bot:'DVFMTESTCRM_bot',source:{index_sha256:hash(sourceHtml),app_sha256:hash(sourceApp),yougile_sha256:hash(sourceYougile)},output:{index_sha256:hash(html),app_sha256:hash(app),yougile_sha256:hash(sourceYougile)}},null,2)+'\n'
 };
 const outputFlag=process.argv.indexOf('--out');
 const out=outputFlag>=0?resolve(process.argv[outputFlag+1]):new URL('preview/staging/',root);

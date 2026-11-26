@@ -1,4 +1,5 @@
 import {serve,body,json,env,requireSecret,telegram,rpc,taskLink} from '../_shared/runtime.ts';
+import {inspectYougile} from '../_shared/yougile.js';
 import {HttpError} from '../_shared/security.js';
 // Temporary administrative helper for this staging project and bot only.
 const project='https://wepogbvijpvyvyfzxzeo.supabase.co';
@@ -7,9 +8,21 @@ serve(async req=>{
  requireSecret(req.headers.get('authorization'),'OUTBOX_WORKER_AUTH');
  if(env('SUPABASE_URL').replace(/\/$/,'')!==project)throw new HttpError(403,'Staging project required');
  const input=await body(req);
- if(!['inspect','configure','configure_worker'].includes(input.action))throw new HttpError(400,'Use inspect, configure or configure_worker');
+ if(!['inspect','configure','configure_worker','configure_yougile_worker'].includes(input.action))throw new HttpError(400,'Use inspect, configure, configure_worker or configure_yougile_worker');
  const me=await telegram('getMe',{});
  if(!me.is_bot||me.username?.toLowerCase()!==botUsername.toLowerCase())throw new HttpError(409,'Staging bot token does not match expected username');
+ if(input.action==='configure_yougile_worker'){
+  if(Deno.env.get('YOUGILE_SYNC_ENABLED')!=='true')throw new HttpError(409,'Сначала настройте связь и YOUGILE_SYNC_ENABLED');
+  const workerAuth=env('OUTBOX_WORKER_AUTH');
+  if(!/^Bearer [A-Za-z0-9_-]{32,256}$/.test(workerAuth))throw new HttpError(503,'Неверный формат OUTBOX_WORKER_AUTH');
+  await inspectYougile({apiKey:env('YOUGILE_API_KEY'),projectId:env('YOUGILE_PROJECT_ID'),boardId:env('YOUGILE_BOARD_ID'),baseUrl:Deno.env.get('YOUGILE_API_BASE')});
+  try{return json({ok:true,worker:await rpc('dvfm_staging_configure_you_worker',{p_worker_auth:workerAuth})});}
+  catch(error){
+   if(error instanceof HttpError&&error.code==='PGRST202')throw new HttpError(503,'Примените staging-install-yougile-worker.sql в тестовом проекте');
+   if(error instanceof HttpError)throw new HttpError(error.status,'Ошибка расписания YouGile. Код БД: '+(error.code||'UNKNOWN'));
+   throw error;
+  }
+ }
  if(input.action==='configure_worker'){
   const workerAuth=env('OUTBOX_WORKER_AUTH');
   if(!/^Bearer [A-Za-z0-9_-]{32,256}$/.test(workerAuth))throw new HttpError(503,'OUTBOX_WORKER_AUTH: требуется Bearer, один пробел и 32–256 латинских букв, цифр, _ или -. Исправьте Secrets и Authorization в Test.');

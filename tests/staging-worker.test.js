@@ -36,3 +36,10 @@ test('scheduler refuses to store credentials if Vault decrypted view is exposed'
  await db.exec('grant usage on schema vault to anon;grant select on vault.decrypted_secrets to anon');
  try{await assert.rejects(call(key),/Vault decrypted view must not be readable/);}finally{await db.exec('revoke select on vault.decrypted_secrets from anon');}
 });
+
+test('YouGile cron uses the same private Vault reference and a separate fixed job',async()=>{
+ await db.exec('create table dvfm.yg_config(id integer)');
+ const sql=(await readFile(new URL('../docs/staging-install-yougile-worker.sql',import.meta.url),'utf8')).replace(/^create extension[^;]*;$/gm,'');await db.exec(sql);
+ const result=(await db.query('select public.dvfm_staging_configure_you_worker($1) as value',[key])).rows[0].value;
+ assert.equal(result.job_name,'dvfm-staging-yougile');const job=(await db.query("select * from cron.job where jobname='dvfm-staging-yougile'")).rows[0];assert.ok(job.command.includes('/yougile?worker=1'));assert.ok(!job.command.includes(key));
+});

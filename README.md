@@ -19,4 +19,4 @@ npm run test:browser
 Для browser test установить Chromium и указать `CHROMIUM_PATH`, если он не в `/usr/bin/chromium`. Тесты используют только синтетические записи. Перед production обязательна staging-приёмка Supabase/Telegram. Добавление сотрудников через UI — последний, отложенный этап.
 
 - [Диагностика недоступности Supabase](docs/CONNECTION-INCIDENT.md)
-- [YouGile: первый этап подключения](docs/YOUGILE.md)
+- [YouGile: двусторонняя синхронизация](docs/YOUGILE.md)

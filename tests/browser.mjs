@@ -6,7 +6,7 @@ import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 const fixtureRoot=process.env.DVFM_BROWSER_ROOT?pathToFileURL(resolve(process.env.DVFM_BROWSER_ROOT)+'/'):new URL('../',import.meta.url);
 const apiBase=process.env.DVFM_BROWSER_API_BASE||'https://mskbgkiksgpdosiarjvo.supabase.co/functions/v1/';
-const server=createServer(async(req,res)=>{try{res.setHeader('Content-Type',req.url==='/app.js'?'text/javascript':'text/html');res.end(await readFile(new URL(req.url==='/app.js'?'app.js':'index.html',fixtureRoot)));}catch{res.writeHead(404).end();}});
+const server=createServer(async(req,res)=>{try{const file=req.url==='/'?'index.html':req.url?.slice(1);if(!['index.html','app.js','yougile-ui.js'].includes(file)){res.writeHead(404).end();return;}res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':'text/html');res.end(await readFile(new URL(file,fixtureRoot)));}catch{res.writeHead(404).end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
 try{

@@ -7,7 +7,7 @@ function removeImports(source,path){
  const imports=ast.statements.filter(ts.isImportDeclaration);
  for(const node of imports){
   const specifier=node.moduleSpecifier.text;
-  if(!['./security.js','../_shared/runtime.ts','../_shared/security.js','../_shared/yougile.js'].includes(specifier))throw new Error(`Unexpected bundle dependency in ${path}`);
+  if(!['./security.js','../_shared/runtime.ts','../_shared/security.js','../_shared/yougile.js','./yougile.js','./yougile-merge.js','../_shared/yougile-sync.js'].includes(specifier))throw new Error(`Unexpected bundle dependency in ${path}`);
  }
  for(const node of imports.reverse())source=source.slice(0,node.getFullStart())+source.slice(node.getEnd());
  return source;
@@ -17,7 +17,8 @@ await mkdir(new URL('deploy/dashboard/',root),{recursive:true});
 for(const name of names){
  const path=`supabase/functions/${name}/index.ts`;
  const entry=removeImports(await readFile(new URL(path,root),'utf8'),path);
- const extra=name==='yougile'?removeImports(await readFile(new URL('supabase/functions/_shared/yougile.js',root),'utf8'),'_shared/yougile.js'):'';
+ const dependencies=name==='yougile'?['yougile.js','yougile-merge.js','yougile-sync.js']:name==='staging-telegram-setup'?['yougile.js']:[];
+ const extra=(await Promise.all(dependencies.map(async f=>removeImports(await readFile(new URL('supabase/functions/_shared/'+f,root),'utf8'),f)))).join('\n');
  const source=common.join('\n')+'\n'+(extra?extra+'\n':'')+entry;
  const output=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext},reportDiagnostics:true});
  if(output.diagnostics?.length)throw new Error(`Bundle syntax error: ${name}`);

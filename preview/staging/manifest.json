@@ -3,11 +3,13 @@
   "api_base": "https://wepogbvijpvyvyfzxzeo.supabase.co/functions/v1/",
   "bot": "DVFMTESTCRM_bot",
   "source": {
-    "index_sha256": "d7081495e6e34b469ab345406479dcb2e480d374f0ab0b7d6d2fc5f4908f665b",
-    "app_sha256": "3931c5caf0e87b50507c7aec15d09907581615c544aa71e5d0e2e12cedded9e4"
+    "index_sha256": "f2a9927abe5aa59a6f6a2a19dde766e26c28ffe66bf980b97e0e6edd1cbe89c5",
+    "app_sha256": "ee5141860d762e2bae4f0eafbd69c1e46f0a35fe7a2bbf3b2698735d1806d3a3",
+    "yougile_sha256": "362aa373dacac367794a3e5e79a388fb994f4819b40d9603a7047d33942045c8"
   },
   "output": {
-    "index_sha256": "f142756dc7b65fd4812a73d29987329eba6cf446f0721cf5cdc6af8dd7dfef28",
-    "app_sha256": "b3cb5ce8f9504ff2e1f148a919c2d3762a0bbe11fc17d403fe4420f3a1d39b9b"
+    "index_sha256": "32a02884fef4625f0f830ec594764d02ab43205aa7f083a0ab4b61bb5a469740",
+    "app_sha256": "8bfb64286c73e668e6e6cc69f9b20950d171b22da6775ca70c5cf470fe5fe2f2",
+    "yougile_sha256": "362aa373dacac367794a3e5e79a388fb994f4819b40d9603a7047d33942045c8"
   }
 }

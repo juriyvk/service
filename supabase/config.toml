@@ -6,3 +6,6 @@ verify_jwt = false
 verify_jwt = false
 [functions.staging-telegram-setup]
 verify_jwt = false
+
+[functions.yougile]
+verify_jwt = false

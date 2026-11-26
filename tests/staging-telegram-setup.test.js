@@ -11,8 +11,12 @@ const source=await readFile(new URL('../deploy/dashboard/staging-telegram-setup.
 await writeFile(`${temp}/setup.js`,ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText);await import(pathToFileURL(`${temp}/setup.js`));
 const originalFetch=globalThis.fetch;let calls=[],wrongBot=false,currentUrl='',mainEnabled=true,rpcFault=null;
 globalThis.fetch=async(url,options)=>{
- const method=String(url).split('/').at(-1),data=JSON.parse(options.body);calls.push({method,data});
+ const method=String(url).split('/').at(-1),data=options.body?JSON.parse(options.body):{};calls.push({method,data});
  if(method==='dvfm_staging_configure_worker'&&rpcFault)return new Response(JSON.stringify(rpcFault),{status:rpcFault.code==='PGRST202'?404:400});
+ if(String(url).includes('/api-v2/projects/'))return new Response(JSON.stringify({id:values.YOUGILE_PROJECT_ID,title:'Fixture'}));
+ if(String(url).includes('/api-v2/boards/'))return new Response(JSON.stringify({id:values.YOUGILE_BOARD_ID,projectId:values.YOUGILE_PROJECT_ID,title:'Fixture'}));
+ if(String(url).includes('/api-v2/columns?'))return new Response(JSON.stringify({paging:{next:false},content:[]}));
+ if(method==='dvfm_staging_configure_you_worker')return new Response(JSON.stringify({configured:true,job_name:'dvfm-staging-yougile',schedule:'* * * * *'}));
  if(method==='dvfm_staging_configure_worker')return new Response(JSON.stringify({configured:true,job_name:'dvfm-staging-notifications',schedule:'* * * * *'}));
  let result;if(method==='getMe')result={is_bot:true,has_main_web_app:mainEnabled,username:wrongBot?'other_fixture_bot':'DVFMTESTCRM_bot'};
  else if(method==='getWebhookInfo')result={url:currentUrl,pending_update_count:0};
@@ -50,4 +54,10 @@ test('worker maps missing RPC and SQL codes without revealing database error det
   const response=await handler(request('configure_worker'));assert.equal(response.status,status);const data=await response.json();const serialized=JSON.stringify(data);assert.ok(!serialized.includes('synthetic-private'));assert.ok(!serialized.includes('synthetic-query'));assert.ok(!serialized.includes('synthetic-internal'));assert.ok(!serialized.includes('invalid sensitive code'));
  }
  rpcFault=null;
+});
+
+test('YouGile scheduler requires explicit enabling and uses a fixed RPC without echoing auth',async()=>{
+ calls=[];assert.equal((await handler(request('configure_yougile_worker'))).status,409);assert.ok(!calls.some(c=>c.method==='dvfm_staging_configure_you_worker'));
+ Object.assign(values,{YOUGILE_SYNC_ENABLED:'true',YOUGILE_API_KEY:'synthetic-key',YOUGILE_PROJECT_ID:'60000000-0000-4000-8000-000000000001',YOUGILE_BOARD_ID:'60000000-0000-4000-8000-000000000002'});
+ calls=[];const r=await handler(request('configure_yougile_worker'));assert.equal(r.status,200);const data=await r.json();assert.equal(data.worker.job_name,'dvfm-staging-yougile');assert.ok(!JSON.stringify(data).includes(values.OUTBOX_WORKER_AUTH));assert.ok(!calls.some(c=>c.method==='setWebhook'));
 });
